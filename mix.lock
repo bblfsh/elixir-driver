@@ -1,0 +1,3 @@
+%{"msgpax": {:hex, :msgpax, "1.1.0", "e31625e256db2decca1ae2b841f21b4d2483b1332649ce3ebc96c7ff7a4986e3", [:mix], [{:plug, "~> 1.0", [hex: :plug, optional: true]}]},
+  "phst_transform": {:hex, :phst_transform, "1.0.2", "10b6b6fc0affac45860f085c641324968c30c9de3fe975090e584c9e5f6a0c89", [:mix], []},
+  "poison": {:hex, :poison, "3.0.0", "625ebd64d33ae2e65201c2c14d6c85c27cc8b68f2d0dd37828fde9c6920dd131", [:mix], []}}
