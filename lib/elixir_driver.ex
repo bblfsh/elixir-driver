@@ -6,7 +6,8 @@ defmodule ElixirDriver do
   @doc """
   """
   def loop do
-    IO.read(:stdio, :all)
+    IO.read(:stdio, :line)
+    |> Poison.Parser.parse
     |> handle
     |> write
     loop()
@@ -22,20 +23,22 @@ defmodule ElixirDriver do
   end
 
   def return_error reason, req do
-    map_for_error reason
+    map_for_error(reason)
     |> Map.merge(map_for_request(req))
-    |> pack
   end
 
   def handle {:error, reason} do
-    return_error reason
+    return_error(reason)
+    |> Map.merge(map_for_request())
+    |> make_fatal
+    |> pack
   end
 
   def handle {:ok, req} do
     req
     |> process
     |> build_response
-    |> Map.merge(map_for_request(req))
+    |> Map.merge(map_for_request())
     |> pack
   end
 
@@ -55,9 +58,9 @@ defmodule ElixirDriver do
   end
 
   def pack msg do
-    case Msgpax.pack(DeepTupleConverter.convert(msg), iodata: false) do
+    case Poison.encode(DeepTupleConverter.convert(msg)) do
       {:ok, packed} -> packed
-      {:error, reason} -> return_error reason
+      {:error, reason} -> pack(return_error reason)
     end
   end
 
@@ -69,7 +72,7 @@ defmodule ElixirDriver do
     %{ "status" => "ok", "ast" => ast }
   end
 
-  def map_for_request req do
+  def map_for_request req \\ %{} do
     Map.merge driver_info_map(), default_map_from_req(req)
   end
 
@@ -78,6 +81,10 @@ defmodule ElixirDriver do
       "language" => lang(req),
       "language_version" => lang_version(req)
     }
+  end
+
+  def make_fatal resp do
+    Map.put resp, "status", "fatal"
   end
 
   def driver_info_map do

@@ -13,7 +13,10 @@ defmodule ElixirDriver.Mixfile do
        "coveralls.html": :test,
        "coveralls.json": :test,
      ],
-    test_coverage: [tool: ExCoveralls]]
+    test_coverage: [tool: ExCoveralls],
+    escript: [main_module: ElixirDriverCli,
+              name: "native",
+              path: "bin/native"]]
   end
 
   # Configuration for the OTP application
