@@ -50,6 +50,10 @@ defmodule ElixirDriver do
     return_error "did not understood action #{action}"
   end
 
+  def process anything do
+    return_error "could not understand #{inspect anything}"
+  end
+
   def build_response content do
     case BblfshDriver.parse content do
       {:ok, ast} -> map_for_ast(ast)

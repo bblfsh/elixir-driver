@@ -108,6 +108,27 @@ defmodule ElixirDriverTest do
 
   end
 
+  test "return_error for estale returns a message about NFS" do
+    resp = ElixirDriver.return_error :estale, %{}
+
+    assert_response resp, "error"
+    assert String.contains?(hd(resp["errors"]), "NFS")
+  end
+
+  test "process with an unknown action returns an error" do
+    resp = ElixirDriver.process(%{"action" => "UnknownActionForTest"})
+
+    assert_response resp, "error"
+    assert String.contains?(hd(resp["errors"]), "UnknownActionForTest")
+  end
+
+  test "process with unknown command errors" do
+    resp = ElixirDriver.process("Calimero")
+
+    assert_response resp, "error"
+    assert String.contains?(hd(resp["errors"]), "Calimero")
+  end
+
   def assert_response(response, status \\ "ok") when is_map(response) do
     assert_has_key_with_value response, "status", status
     assert_has_key_with_value response, "language", "elixir"
