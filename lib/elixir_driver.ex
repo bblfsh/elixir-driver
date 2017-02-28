@@ -14,7 +14,7 @@ defmodule ElixirDriver do
   end
 
   def write item do
-    IO.write :stdio, item
+    IO.puts :stdio, item
   end
 
   def return_error reason, req \\ %{}
@@ -88,7 +88,7 @@ defmodule ElixirDriver do
   end
 
   def driver_info_map do
-    %{ "driver" => "elixir #{ElixirDriver.Mixfile.project[:version]}" }
+    %{ "driver" => "elixir 0.1.0" }
   end
 
   def lang req do
